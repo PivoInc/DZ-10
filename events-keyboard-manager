@@ -4,9 +4,28 @@ using System.Reflection.Metadata;
 using static KeyboardManager;
 using System.IO;
 
-class myEventArg: EventArgs
+class Subscribers
 {
-    int number;
+    public void DisplayMessage_Three(char chr)
+    {
+        Console.WriteLine("Three subsciber:" + chr + "\n");
+    }
+    public void DisplayMessage_Five(char chr)
+    {
+        Console.WriteLine("Five subsciber:" + chr + "\n");
+    }
+    public void DisplayMessage_Digit(char chr)
+    {
+        Console.WriteLine("AnyDigit subsciber:" + chr + "\n");
+    }
+    public void LogWrite(char chr)
+    {
+        string path = "C:\\Users\\User\\Desktop\\log.txt";
+        StreamWriter SW = new StreamWriter(path, true, System.Text.Encoding.Default);
+        string text = "Key " + chr + " was pressed";
+        SW.WriteLine(text);
+        SW.Close();
+    }
 }
 class KeyboardManager
 {
@@ -21,16 +40,15 @@ class KeyboardManager
         while (true)
         {
             KeyboardManager keyboardManager = new KeyboardManager();
-
-            keyboardManager.ThreeKeyPressed += DisplayMessage_Three;
-            keyboardManager.FiveKeyPressed += DisplayMessage_Five;
-            keyboardManager.DigitKeyPressed += DisplayMessage_Digit;
-            keyboardManager.LogKeyPressed += LogWrite;
+            Subscribers subscribers= new Subscribers();
+            keyboardManager.ThreeKeyPressed += subscribers.DisplayMessage_Three;
+            keyboardManager.FiveKeyPressed += subscribers.DisplayMessage_Five;
+            keyboardManager.DigitKeyPressed += subscribers.DisplayMessage_Digit;
+            keyboardManager.LogKeyPressed += subscribers.LogWrite;
 
             var key_pressed = Console.ReadKey();
             Console.WriteLine("\n");
             char key_chr = key_pressed.KeyChar;
-
             if (key_chr == '3')
             {
                 keyboardManager.ThreeKeyPressed(key_chr);
@@ -45,30 +63,7 @@ class KeyboardManager
             {
                 keyboardManager.DigitKeyPressed(key_chr);
             }
-
             keyboardManager.LogKeyPressed(key_chr);
-
-            void DisplayMessage_Three(char chr)
-            {
-                Console.WriteLine("Three subsciber:" + chr + "\n");
-            }
-            void DisplayMessage_Five(char chr)
-            {
-                Console.WriteLine("Five subsciber:" + chr + "\n");
-            }
-            void DisplayMessage_Digit(char chr)
-            {
-                Console.WriteLine("AnyDigit subsciber:" + chr + "\n");
-            }
-            void LogWrite(char chr)
-            {
-                string path = "C:\\Users\\User\\Desktop\\log.txt";
-                StreamWriter SW = new StreamWriter(path, true, System.Text.Encoding.Default);
-                string text = "Key " + chr + " was pressed";
-                SW.WriteLine(text);
-                SW.Close();
-            }
         }
     }
-   
 }
